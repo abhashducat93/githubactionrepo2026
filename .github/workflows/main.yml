@@ -1,31 +1,26 @@
-name: Workflow1
-
+name: Deploy Website to GitHub Pages
 
 on:
   push:
-    branches: [ master ]
-
+    branches: [ main ]
 
 jobs:
   deploy:
-    runs-on: self-hosted  # This tells GitHub to use your self-hosted runner
-    
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Install dependencies (if any)
-      run: echo "Installing dependencies..."
-      
-    - name: Deploy to server
-      run: |
-        # Replace with your deployment commands
-        echo "Deploying to self-hosted server..."
-        # Example commands (customize for your server):
-        sudo apt install apache2 -y
-        #sudo mkdir /var/www/html
-        sudo systemctl start apache2
-        sudo systemctl enable apache2 
-        sudo cp -r . /var/www/html/
-        sudo chown -R www-data:www-data /var/www/html/
-        sudo systemctl restart apache2  # or nginx if you're using that
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Remove these lines if you don't need Node.js:
+      # - name: Setup Node
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
+      # - name: Install dependencies
+      #   run: npm install
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN1 }}
+          publish_dir: ./
